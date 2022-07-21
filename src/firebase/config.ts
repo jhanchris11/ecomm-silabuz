@@ -3,12 +3,12 @@ import { getAuth, AuthError } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore/lite'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAFFrUB5ahC9wqrpyiB5DqbMpWGi8nqcpY',
-  authDomain: 'ecom-silabuz.firebaseapp.com',
-  projectId: 'ecom-silabuz',
-  storageBucket: 'ecom-silabuz.appspot.com',
-  messagingSenderId: '328922347968',
-  appId: '1:328922347968:web:b8b6740571881ba8e73025'
+  apiKey: import.meta.env.VITE_AP_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID
 }
 
 export const FirebaseApp = initializeApp(firebaseConfig)

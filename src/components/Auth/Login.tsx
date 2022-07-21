@@ -58,7 +58,7 @@ export const Login = () => {
           </Alert>
         )}
 
-        <Box boxShadow="lg" p={8} rounded="lg">
+        <Box boxShadow="lg" p={8} rounded="lg" bg="white">
           <form onSubmit={handleSubmit}>
             <Stack spacing={4}>
               <FormControl id="email">
