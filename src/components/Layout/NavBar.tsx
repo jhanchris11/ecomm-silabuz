@@ -18,69 +18,30 @@ import {
   Tooltip
 } from '@chakra-ui/react'
 import { Link as LinkRouter, useNavigate } from 'react-router-dom'
+import { routesLink, routesLinksAuth } from '../../content/NavBar'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { CartIcon } from '../../icons/Cart'
-import { LoginIcon } from '../../icons/Login'
-import { LogoutIcon } from '../../icons/Logout'
-import { RegisterIcon } from '../../icons/Register'
 import { UserIcon } from '../../icons/User'
+
 import { startLogout } from '../../redux/auth/thunk'
 import { Search } from '../commons/Search'
 import { MobileNav } from './MobileNav'
+
 export const NavBar = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
-  const { status, displayName } = useAppSelector((state) => state.auth)
+  const { status } = useAppSelector((state) => state.auth)
   const { cartItems } = useAppSelector((state) => state.cart)
+
   const handleRedirect = (to: string) => {
     if (to === 'Logout') {
       dispatch(startLogout())
     }
-    // navigate(to)
   }
-  console.log(cartItems)
-  const routesLinksAuth = [
-    {
-      id: 1,
-      title: 'Login',
-      href: '/auth/login',
-      icon: <LoginIcon />,
-      type: 'unauthenticated'
-    },
-    {
-      id: 2,
-      title: 'Register',
-      href: '/auth/register',
-      icon: <RegisterIcon />,
-      type: 'unauthenticated'
-    },
-    {
-      id: 3,
-      title: 'Mi perfil',
-      href: '/profile',
-      icon: <UserIcon />,
-      type: 'authenticated'
-    },
-    {
-      id: 4,
-      title: 'Logout',
-      href: '/profile',
-      icon: <LogoutIcon />,
-      type: 'authenticated'
-    }
-  ]
+
   const routesAuthByStatus = routesLinksAuth.filter(
     (route) => route.type === status
   )
-
-  console.log(routesAuthByStatus)
-  const routesLink = [
-    {
-      id: 1,
-      label: 'Products',
-      href: '/products/all'
-    }
-  ]
 
   return (
     <Box as="header" height={20}>
@@ -109,19 +70,6 @@ export const NavBar = () => {
         </Stack>
         <Search />
         <Box>
-          {/* <Flex>
-              <Avatar src="https://bit.ly/sage-adebayo" size="sm" />
-              <Box ml="3">
-                <Text fontWeight="bold">
-                  Segun Adebayo
-                  <Badge ml="1" colorScheme="green" >
-                    New
-                  </Badge>
-                </Text>
-                <Text fontSize="sm">UI Engineer</Text>
-              </Box>
-            </Flex> */}
-          {/* {status !== 'authenticated' && ( */}
           <Menu>
             <MenuButton
               variant="white"
@@ -130,27 +78,17 @@ export const NavBar = () => {
             />
 
             <MenuList>
-              {/* {status !== 'authenticated'} */}
               {routesAuthByStatus.map((route) => (
                 <MenuItem
                   key={route.id}
                   children={route.title}
-                  icon={route.icon}
+                  icon={<route.icon />}
                   onClick={() => handleRedirect(route.title)}
                 />
               ))}
             </MenuList>
           </Menu>
-          {/* ))} */}
 
-          {/* <Button
-              variant="white"
-              colorScheme="purple"
-              color={'purple.200'}
-              _hover={{ color: 'purple.600' }}
-            > */}
-          {/* <Avatar> */}
-          {/* <Box></Box> */}
           <Badge as="button" onClick={() => navigate('/cart')}>
             <Avatar
               size="sm"
@@ -163,7 +101,6 @@ export const NavBar = () => {
               </AvatarBadge>
             </Avatar>
           </Badge>
-          {/* <CartIcon width={24} /> */}
         </Box>
       </Flex>
       <Flex display={{ base: 'flex', md: 'none' }}>
