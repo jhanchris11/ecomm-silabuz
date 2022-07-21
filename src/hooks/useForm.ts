@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { ProductItem } from '../types'
 
 interface FormProps {
   email: string
@@ -15,7 +16,10 @@ type FormItem = 'email' | 'password' | 'displayName'
 type AFunctionType = (value: string) => boolean
 // type FormItemValidation = Record<FormItem, [ReturnType<AFunctionType>, string]>
 
-export const useForm = (initialValues: FormProps, formValidations?: any) => {
+export const useForm = (
+  initialValues: FormProps | any,
+  formValidations?: any
+) => {
   const [formState, setFormState] = useState(initialValues)
 
   const [formValidation, setFormValidation] = useState<any>()
@@ -43,6 +47,10 @@ export const useForm = (initialValues: FormProps, formValidations?: any) => {
   useEffect(() => {
     createValidations()
   }, [formState])
+
+  useEffect(() => {
+    setFormState(initialValues)
+  }, [initialValues])
 
   const createValidations = () => {
     const formCheckedValues = {} as any // type FormItem = 'email' | 'password' | 'displayName'

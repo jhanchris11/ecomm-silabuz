@@ -11,20 +11,22 @@ import { SearchIcon } from '../../icons/Search'
 import {
   BaseItem,
   createAutocomplete,
-  InternalAutocompleteSource
+  InternalAutocompleteSource,
+  AutocompleteOptions
 } from '@algolia/autocomplete-core'
 import { useMemo, useRef, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { ProductItem } from '../../types'
 import { useNavigate } from 'react-router-dom'
 import { startGetProductById } from '../../redux/product/thunks'
+import { getSearchProduts } from '../../helpers'
 
 export interface CollectionType {
   source: InternalAutocompleteSource<BaseItem>
   items: ProductItem[]
 }
 
-export const Search = (props: any) => {
+export const Search = (props: Partial<AutocompleteOptions<any>>) => {
   const dispatch = useAppDispatch()
   let navigate = useNavigate()
   const { products } = useAppSelector((state) => state.products)
@@ -32,24 +34,18 @@ export const Search = (props: any) => {
     collections: [],
     isOpen: false
   })
-  const getSearchProduts = (query: string) => {
-    return products?.filter((product) =>
-      product.title.toLowerCase().includes(query.toLowerCase())
-    )
-  }
 
   const autocomplete = useMemo(
     () =>
       createAutocomplete({
-        placeholder: 'Search products',
+        placeholder: 'Search products global',
         onStateChange: ({ state }: any) => setAutocompleteState(state),
         getSources: () => [
           {
             sourceId: 'products-id',
             getItems: ({ query }) => {
               if (!!query) {
-                console.log(getSearchProduts(query))
-                return getSearchProduts(query)
+                return getSearchProduts(products, query)
               }
             }
           }
@@ -59,17 +55,16 @@ export const Search = (props: any) => {
     [props]
   )
 
-  const formRef = useRef(null)
-  const inputRef = useRef(null)
-  const panelRef = useRef(null)
+  const formRef = useRef<HTMLFormElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
 
   const formProps = autocomplete.getFormProps({
     inputElement: inputRef.current
-  }) as BaseItem
-
+  }) as any
   const inputProps = autocomplete.getInputProps({
     inputElement: inputRef.current
-  }) as BaseItem
+  }) as any
 
   console.log(autocompleteState)
   const handleProductDetail = (product: ProductItem): void => {
@@ -79,9 +74,9 @@ export const Search = (props: any) => {
   return (
     <form {...formProps} ref={formRef}>
       <Box pos="relative">
-        <InputGroup width="auto">
+        <InputGroup width="auto" bg="white" rounded="lg">
           <InputLeftElement pointerEvents="none" children={<SearchIcon />} />
-          <Input size="md" {...inputProps} />
+          <Input size="md" ref={inputRef} {...inputProps} />
         </InputGroup>
         {autocompleteState.isOpen && (
           <Box

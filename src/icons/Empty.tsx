@@ -1,19 +1,11 @@
-import { IconProps } from '../types'
-
-export const EmptyIcon = ({
-  size,
-  width = 24,
-  height = '100%',
-  ...props
-}: IconProps) => {
+export const EmptyIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       data-name="Layer 1"
-      width={896}
-      height={747.97143}
+      width={400}
+      height={400}
       viewBox="0 0 896 747.97143"
-      {...props}
     >
       <path
         d="M41.634 712.738c12.428 23.049 38.806 32.943 38.806 32.943s6.227-27.475-6.201-50.524-38.806-32.944-38.806-32.944-6.227 27.476 6.201 50.525z"

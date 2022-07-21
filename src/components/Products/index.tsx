@@ -1,11 +1,27 @@
-import { SimpleGrid, Tabs, Tab, TabList } from '@chakra-ui/react'
+import {
+  SimpleGrid,
+  Tabs,
+  Tab,
+  TabList,
+  InputLeftElement,
+  InputGroup,
+  Input,
+  useDisclosure,
+  Stack,
+  Button,
+  Tooltip
+} from '@chakra-ui/react'
 import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { useDebounce } from '../../hooks/useDebounce'
+import { PlusIcon } from '../../icons/Plus'
+import { SearchIcon } from '../../icons/Search'
 
 import { addToCart } from '../../redux/cart/cart.slice'
 import {
+  starSearchProductByTitle,
   startDeleteProductById,
   startGetProductsByCategory
 } from '../../redux/product/thunks'
@@ -13,9 +29,9 @@ import {
 import { ProductItem } from '../../types'
 
 import { Product } from './Product'
+import { ProductModal } from './ProductModal'
 
 const fixIndexCategory = (state: any): number => {
-  console.log(state)
   if (state !== null) {
     return state.fromCategory
   }
@@ -24,6 +40,9 @@ const fixIndexCategory = (state: any): number => {
 
 export const ListProducts = () => {
   const location = useLocation()
+  const [search, setSearch] = useState<string>('')
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const searchDebounce = useDebounce(search, 500)
 
   const [tabIndex, setTabIndex] = useState<number>(
     fixIndexCategory(location.state)
@@ -49,8 +68,22 @@ export const ListProducts = () => {
   const handleDeleteProduct = (id: number) => {
     dispatch(startDeleteProductById(id))
   }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearch(e.target.value)
+    dispatch(starSearchProductByTitle(e.target.value))
+  }
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+    e.preventDefault()
+    dispatch(starSearchProductByTitle(searchDebounce))
+    setSearch('')
+  }
+  const handleOpenModal = (): void => {
+    onOpen()
+  }
+
   return (
-    <Tabs index={tabIndex} onChange={handleTabsChange}>
+    <Tabs index={tabIndex} onChange={handleTabsChange} py={4}>
       <TabList>
         <Tab>All</Tab>
         {categories.map((category, index) => (
@@ -59,6 +92,34 @@ export const ListProducts = () => {
           </Tab>
         ))}
       </TabList>
+      <Stack direction="row" spacing={4} align="center" justify="center">
+        <form onSubmit={handleSubmit}>
+          <InputGroup
+            width={{ base: 340, md: 400 }}
+            bg="white"
+            rounded="lg"
+            m="32px auto"
+          >
+            <InputLeftElement pointerEvents="none" children={<SearchIcon />} />
+            <Input
+              size="md"
+              placeholder="Buscar products"
+              onChange={handleChange}
+              value={search}
+            />
+          </InputGroup>
+        </form>
+        <Tooltip placement="top" label={'Add Product'}>
+          <Button
+            colorScheme="purple"
+            variant="ghost"
+            color="purple.400"
+            onClick={handleOpenModal}
+          >
+            <PlusIcon width={32} height={32} />
+          </Button>
+        </Tooltip>
+      </Stack>
       <SimpleGrid
         columns={{ base: 1, md: 3 }}
         spacing={{ base: 5, lg: 8 }}
@@ -70,9 +131,11 @@ export const ListProducts = () => {
             product={product}
             handleAddCart={handleAddCart}
             handleDeleteProduct={handleDeleteProduct}
+            handleOpenModal={handleOpenModal}
           />
         ))}
       </SimpleGrid>
+      <ProductModal isOpen={isOpen} onClose={onClose} />
     </Tabs>
   )
 }

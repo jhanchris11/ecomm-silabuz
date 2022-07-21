@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { getSearchProduts } from '../../helpers'
 
 import { getProducts } from '../../services/Products'
 import { ProductItem } from '../../types'
@@ -8,13 +9,17 @@ interface ProductsState {
   product: ProductItem
   status: 'pending' | 'success' | 'rejected' | null
   categories: string[]
+  currentProduct: ProductItem
+  isEditProduct: boolean
 }
 
 const initialState = {
   products: [],
+  currentProduct: {} as ProductItem,
   status: null,
   categories: [],
-  product: {} as ProductItem
+  product: {} as ProductItem,
+  isEditProduct: false
 } as ProductsState
 
 export const productsFetch = createAsyncThunk<ProductItem[]>(
@@ -47,8 +52,31 @@ export const productSlice = createSlice({
       state.categories = action.payload
     },
     setProductById: (state, action) => {
-      console.log(action)
       state.product = action.payload
+    },
+    setSearchProducts: (state, action) => {
+      state.products = getSearchProduts(state.products, action.payload)
+    },
+    setProducts: (state, action) => {
+      state.products = action.payload
+    },
+    setCurrentProduct: (state, action) => {
+      state.currentProduct = action.payload
+    },
+    setIsEditProduct(state, action) {
+      state.isEditProduct = action.payload
+    },
+
+    setEditProduct: (state, action) => {
+      state.products = state.products.map((product) => {
+        if (product.id === action.payload.id) {
+          return action.payload
+        }
+        return product
+      })
+    },
+    setNewProduct: (state, action) => {
+      state.products.push(action.payload)
     }
   },
   extraReducers: (builder) => {
@@ -69,5 +97,11 @@ export const {
   setFilterProductsByCategory,
   setDeleteProduct,
   setAllCategories,
-  setProductById
+  setProductById,
+  setSearchProducts,
+  setProducts,
+  setCurrentProduct,
+  setIsEditProduct,
+  setEditProduct,
+  setNewProduct
 } = productSlice.actions

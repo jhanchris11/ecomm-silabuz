@@ -34,7 +34,11 @@ export const Categories = () => {
       <Heading>Categories</Heading>
       <SimpleGrid columns={{ base: 1, md: 4 }} spacing={6} py={12}>
         {listCategories.map((category) => (
-          <Link to={`/products/all`} state={{ fromCategory: category.id }}>
+          <Link
+            key={category.id}
+            to={`/products/all`}
+            state={{ fromCategory: category.id }}
+          >
             <Stack
               key={category.id}
               width="full"

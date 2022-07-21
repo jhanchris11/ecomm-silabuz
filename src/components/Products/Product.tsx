@@ -15,6 +15,10 @@ import { CartIcon } from '../../icons/Cart'
 import { EditIcon } from '../../icons/Edit'
 import { RemoveIcon } from '../../icons/Remove'
 import { StartIcon } from '../../icons/Star'
+import {
+  setCurrentProduct,
+  setIsEditProduct
+} from '../../redux/product/product.slice'
 import { startGetProductById } from '../../redux/product/thunks'
 import { ProductItem } from '../../types'
 
@@ -22,12 +26,14 @@ interface MyProps {
   product: ProductItem
   handleAddCart: (product: ProductItem) => void
   handleDeleteProduct: (id: number) => void
+  handleOpenModal: () => void
 }
 
 export const Product = ({
   product,
   handleAddCart,
-  handleDeleteProduct
+  handleDeleteProduct,
+  handleOpenModal
 }: MyProps) => {
   let navigate = useNavigate()
   const dispatch = useAppDispatch()
@@ -37,7 +43,11 @@ export const Product = ({
     dispatch(startGetProductById(product.id))
     navigate(`/product/${product.id}`)
   }
-
+  const handleEditProduct = (): void => {
+    dispatch(setCurrentProduct(product))
+    dispatch(setIsEditProduct(true))
+    handleOpenModal()
+  }
   return (
     <Stack
       key={id}
@@ -65,7 +75,7 @@ export const Product = ({
               align="left"
             >{`$${product.price.toFixed(2)}`}</Text>
             <Stack direction="row">
-              <Text fontWeight="semibold">{product.rating.rate}</Text>
+              <Text fontWeight="semibold">{product.rating?.rate}</Text>
               <Box color="yellow.400">
                 <StartIcon />
               </Box>
@@ -78,7 +88,7 @@ export const Product = ({
           colorScheme="blue"
           variant="ghost"
           color="blue.400"
-          onClick={() => handleAddCart(product)}
+          onClick={handleEditProduct}
         >
           <EditIcon />
         </Button>

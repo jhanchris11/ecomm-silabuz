@@ -64,7 +64,13 @@ export const NavBar = () => {
         >
           {routesLink.map(({ id, label, href }) => (
             <LinkRouter to={href} key={id}>
-              <Text as="span" cursor="ponter" children={label} />
+              <Text
+                as="span"
+                cursor="ponter"
+                transition="all 0.3s"
+                _hover={{ color: 'primary' }}
+                children={label}
+              />
             </LinkRouter>
           ))}
         </Stack>
