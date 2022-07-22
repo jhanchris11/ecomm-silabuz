@@ -10,7 +10,8 @@ import {
   Button,
   Link,
   Alert,
-  AlertIcon
+  AlertIcon,
+  FormErrorMessage
 } from '@chakra-ui/react'
 import { GoogleIcon } from '../../icons/Google'
 import { Link as LinkRouter } from 'react-router-dom'
@@ -20,17 +21,31 @@ import {
   startSignInByGoogle
 } from '../../redux/auth/thunk'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
+import { formValidationsLogin } from '../../helpers'
 
 export const Login = () => {
   const dispatch = useAppDispatch()
+  const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const { status, errorMessage } = useAppSelector((state) => state.auth)
-  const { email, password, handleInputChange } = useForm({
-    email: '',
-    password: ''
-  })
+  const {
+    email,
+    password,
+    handleInputChange,
+    isFormValid,
+    emailValid,
+    passwordValid
+  } = useForm(
+    {
+      email: '',
+      password: ''
+    },
+    formValidationsLogin
+  )
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault()
+    setFormSubmitted(true)
+    if (!isFormValid) return
     dispatch(
       startLoginByEmailPassword({
         email,
@@ -61,7 +76,7 @@ export const Login = () => {
         <Box boxShadow="lg" p={8} rounded="lg" bg="white">
           <form onSubmit={handleSubmit}>
             <Stack spacing={4}>
-              <FormControl id="email">
+              <FormControl isInvalid={!!emailValid && formSubmitted}>
                 <FormLabel>Email </FormLabel>
                 <Input
                   name="email"
@@ -71,8 +86,9 @@ export const Login = () => {
                   onChange={handleInputChange}
                   autoComplete="off"
                 />
+                <FormErrorMessage>{emailValid}</FormErrorMessage>
               </FormControl>
-              <FormControl id="password">
+              <FormControl isInvalid={!!passwordValid && formSubmitted}>
                 <FormLabel>Password</FormLabel>
                 <Input
                   name="password"
@@ -82,6 +98,7 @@ export const Login = () => {
                   onChange={handleInputChange}
                   autoComplete="off"
                 />
+                <FormErrorMessage>{passwordValid}</FormErrorMessage>
               </FormControl>
 
               <Stack spacing={5}>

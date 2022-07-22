@@ -48,9 +48,9 @@ export const useForm = (
     createValidations()
   }, [formState])
 
-  useEffect(() => {
-    setFormState(initialValues)
-  }, [initialValues])
+  // useEffect(() => {
+  //   setFormState(initialValues)
+  // }, [initialValues])
 
   const createValidations = () => {
     const formCheckedValues = {} as any // type FormItem = 'email' | 'password' | 'displayName'

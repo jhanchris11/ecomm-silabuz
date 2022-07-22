@@ -18,21 +18,7 @@ import { useForm } from '../../hooks/useForm'
 import { Link as LinkRouter } from 'react-router-dom'
 import { startCreatingUserByEmailPassword } from '../../redux/auth/thunk'
 import { useMemo, useState } from 'react'
-
-const formValidations = {
-  email: [
-    (value: string) => value.includes('@'),
-    'El correo debe de tener un @'
-  ],
-  password: [
-    (value: string) => value.length >= 6,
-    'La contraseña debe de tener al menos 6 caracteres'
-  ],
-  displayName: [
-    (value: string) => value.length >= 3,
-    'El nombre debe de tener al menos 3 caracteres'
-  ]
-}
+import { formValidationsRegister } from '../../helpers'
 
 export const Register = () => {
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
@@ -54,7 +40,7 @@ export const Register = () => {
       email: '',
       password: ''
     },
-    formValidations
+    formValidationsRegister
   )
   const dispatch = useAppDispatch()
 

@@ -11,3 +11,28 @@ export const getSearchProduts = (data: ProductItem[], query: string) => {
     product.title.toLowerCase().includes(query.toLowerCase())
   )
 }
+export const formValidationsRegister = {
+  email: [
+    (value: string) => value.includes('@'),
+    'El correo debe de tener un @'
+  ],
+  password: [
+    (value: string) => value.length >= 6,
+    'La contraseña debe de tener al menos 6 caracteres'
+  ],
+  displayName: [
+    (value: string) => value.length >= 3,
+    'El nombre debe de tener al menos 3 caracteres'
+  ]
+}
+
+export const formValidationsLogin = {
+  email: [
+    (value: string) => value.includes('@'),
+    'El correo debe de tener un @'
+  ],
+  password: [
+    (value: string) => value.length >= 6,
+    'La contraseña debe de tener al menos 6 caracteres'
+  ]
+}
