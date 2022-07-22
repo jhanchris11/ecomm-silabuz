@@ -19,10 +19,9 @@ import {
 } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
-import { useForm } from '../../hooks/useForm'
 import { startEditProduct, startNewProduct } from '../../redux/product/thunks'
 
-import { ProductItem } from '../../types'
+// import { ProductItem } from '../../types'
 
 interface MyProps {
   onClose: () => void
@@ -33,11 +32,20 @@ export const ProductModal = ({ onClose, isOpen }: MyProps) => {
   const { currentProduct, categories, isEditProduct } = useAppSelector(
     (state) => state.products
   )
+  const [formState, setFormState] = useState(currentProduct)
 
-  const { formState, title, description, image, handleInputChange } = useForm(
-    currentProduct as ProductItem,
-    {}
-  )
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormState({
+      ...formState,
+      [name]: value
+    })
+  }
+  useEffect(() => {
+    setFormState(currentProduct)
+  }, [currentProduct])
+
+  console.log(currentProduct)
   const dispatch = useAppDispatch()
   const [valueNumber, setValueNumber] = useState<number>()
   const [valueSelect, setValueSelect] = useState<string>('')
@@ -53,7 +61,8 @@ export const ProductModal = ({ onClose, isOpen }: MyProps) => {
     dispatch(startEditProduct(newFormState.id, newFormState))
     onClose()
   }
-
+  console.log(valueNumber)
+  console.log(valueSelect)
   const handleSaveProduct = (): void => {
     const rating = {
       rate: 0,
@@ -66,7 +75,7 @@ export const ProductModal = ({ onClose, isOpen }: MyProps) => {
       ...rating
     }
     onClose()
-    // dispatch(startNewProduct(newFormState))
+    dispatch(startNewProduct(newFormState))
   }
 
   useEffect(() => {
@@ -95,9 +104,9 @@ export const ProductModal = ({ onClose, isOpen }: MyProps) => {
               <FormLabel>Title</FormLabel>
               <Textarea
                 name="title"
-                onChange={handleInputChange}
+                onChange={handleInputChange as any}
                 placeholder="Title"
-                value={title}
+                value={formState.title}
               />
             </FormControl>
 
@@ -119,16 +128,16 @@ export const ProductModal = ({ onClose, isOpen }: MyProps) => {
               <FormLabel>Description</FormLabel>
               <Textarea
                 name="description"
-                onChange={handleInputChange}
-                value={description}
+                onChange={handleInputChange as any}
+                value={formState.description}
               />
             </FormControl>
             <FormControl mt={4}>
               <FormLabel>URL Image</FormLabel>
               <Textarea
                 name="image"
-                onChange={handleInputChange}
-                value={image}
+                onChange={handleInputChange as any}
+                value={formState.image}
               />
             </FormControl>
             <FormControl mt={4}>

@@ -14,13 +14,13 @@ import {
   useColorModeValue,
   Badge,
   Avatar,
-  AvatarBadge,
-  Tooltip
+  AvatarBadge
 } from '@chakra-ui/react'
 import { Link as LinkRouter, useNavigate } from 'react-router-dom'
 import { routesLink, routesLinksAuth } from '../../content/NavBar'
 import { useAppDispatch, useAppSelector } from '../../hooks/redux'
 import { CartIcon } from '../../icons/Cart'
+import { HomeIcon } from '../../icons/Home'
 import { UserIcon } from '../../icons/User'
 
 import { startLogout } from '../../redux/auth/thunk'
@@ -50,10 +50,13 @@ export const NavBar = () => {
         flex={{ base: 1 }}
         height="full"
         justifyContent={{ md: 'space-between' }}
+        px={3}
         display={{ base: 'none', md: 'flex' }}
       >
         <Link width={{ base: 'full', md: 'auto' }} as={LinkRouter} to="/">
-          <Text color={useColorModeValue('gray.800', 'white')}>Logo</Text>
+          <Text color={useColorModeValue('gray.800', 'white')}>
+            <HomeIcon />
+          </Text>
         </Link>
 
         <Stack

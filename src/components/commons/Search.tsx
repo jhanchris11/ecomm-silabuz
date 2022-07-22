@@ -5,7 +5,8 @@ import {
   InputLeftElement,
   Stack,
   Text,
-  Link
+  Link,
+  Image
 } from '@chakra-ui/react'
 import { SearchIcon } from '../../icons/Search'
 import {
@@ -106,9 +107,18 @@ export const Search = (props: Partial<AutocompleteOptions<any>>) => {
                             <Stack
                               key={item.id}
                               p={4}
+                              direction="row"
+                              justify="between"
                               _hover={{ background: 'purple.200' }}
                             >
-                              <Text textDecor={'none'}>{item.title}</Text>
+                              <Image
+                                alt={item.title}
+                                src={item.image}
+                                boxSize={10}
+                              />
+                              <Text pl={2} fontSize={'sm'} textDecor={'none'}>
+                                {item.title}
+                              </Text>
                             </Stack>
                           </Link>
                         ))}
